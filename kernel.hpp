@@ -26,7 +26,7 @@
 namespace cle {
 
     cl_int show_platforms(std::vector<cl::Platform> const& platforms);
-    cl::Program make_program(cl::Context context, std::string file, cl_int& error_code);
+    cl::Program make_program(cl::Context context, std::string file, std::string options, cl_int& error_code);
     void sanitize_make_kernel(cl_int error_code, cl::Context const& context, cl::Program const& program);
 
 }

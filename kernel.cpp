@@ -27,7 +27,7 @@
 #endif
 
 
-cl::Program cle::make_program(cl::Context context, std::string file, cl_int& error_code) {
+cl::Program cle::make_program(cl::Context context, std::string file, std::string options, cl_int& error_code) {
     cl::Program program;
     
     // Open OpenCL source file
@@ -78,7 +78,7 @@ cl::Program cle::make_program(cl::Context context, std::string file, cl_int& err
             context.getInfo(CL_CONTEXT_DEVICES, &context_devices));
 
     error_code = cle_sanitize_val(
-            program.build(context_devices));
+            program.build(context_devices, options.c_str()));
 
     return program;
 }

@@ -97,6 +97,64 @@ int cle::CLInitializer::choose_device_interactive() {
     return 1;
 }
 
+int cle::CLInitializer::init(uint32_t const platform, uint32_t const device) {
+    cl_int err;
+    cl_uint num_devices;
+    std::vector<cl::Device> devices;
+    std::vector<cl::Platform> platforms;
+
+    cl::Platform::get(&platforms);
+    if (platforms.size() == 0) {
+        std::cerr << "Error: no platforms found" << std::endl;
+        return -1;
+    }
+
+    platform_ = cl::Platform(platforms[platform]);
+
+    // Create context
+    cl_context_properties cps[3] = {
+        CL_CONTEXT_PLATFORM,
+        (cl_context_properties)(platforms[platform])(), 0
+    };
+
+    cle_sanitize_ref_return(
+            context_ = cl::Context(
+                CL_DEVICE_TYPE_ALL,
+                cps,
+                NULL,
+                NULL,
+                &err
+                ), err);
+
+    cle_sanitize_val_return(
+            context_.getInfo(
+                CL_CONTEXT_NUM_DEVICES,
+                &num_devices
+                ));
+
+    devices.resize(num_devices);
+
+    cle_sanitize_val_return(
+            context_.getInfo(
+                CL_CONTEXT_DEVICES,
+                &devices
+                ));
+
+    device_ = cl::Device(devices[device]);
+
+    // Create command queue for device
+    cle_sanitize_ref_return(
+            queue_ = cl::CommandQueue(
+                context_,
+                device_,
+                CL_QUEUE_PROFILING_ENABLE,
+                &err
+                ), err);
+
+    return 1;
+}
+
+
 cl::Platform cle::CLInitializer::get_platform() {
     return this->platform_;
 }

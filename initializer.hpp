@@ -10,6 +10,8 @@
 #ifndef CLE_INITIALIZER_HPP
 #define CLE_INITIALIZER_HPP
 
+#include <cstdint>
+
 #ifdef MAC
 #include <OpenCL/cl.hpp>
 #else
@@ -21,6 +23,8 @@ namespace cle {
     public:
         int choose_platform_interactive();
         int choose_device_interactive();
+
+        int init(uint32_t platform, uint32_t device);
 
         cl::Platform get_platform();
         cl::Context get_context();

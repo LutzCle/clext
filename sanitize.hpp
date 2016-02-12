@@ -117,5 +117,25 @@
         }                                               \
     } while(0)
 
+// Pass through error value returned by a previously
+// sanitized function
+// Calls "return" with error value as parameter if an error occured
+//
+// Input
+//      F: expression (without semicolon)
+//
+// Return value:
+//      none
+//
+// Usage example
+//      cl_int g() { cle_sanitize_done_return( f() ); }
+#define cle_sanitize_done_return(F)                     \
+    do {                                                \
+        cl_int error_code = F;                          \
+                                                        \
+        if (error_code != CL_SUCCESS) {                 \
+            return error_code;                          \
+        }                                               \
+    } while(0)
 
 #endif /* CLE_SANITIZE_HPP */

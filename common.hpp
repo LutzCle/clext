@@ -15,5 +15,6 @@
 #include "kernel.hpp"
 #include "sanitize.hpp"
 #include "string.hpp"
+#include "optimization.hpp"
 
 #endif /* CLE_COMMON_HPP */

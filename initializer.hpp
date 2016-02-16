@@ -26,6 +26,7 @@ namespace cle {
 
         int init(uint32_t platform, uint32_t device);
 
+        int print_device_info();
         cl::Platform get_platform();
         cl::Context get_context();
         cl::Device get_device();

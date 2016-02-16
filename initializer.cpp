@@ -12,8 +12,10 @@
 #include "sanitize.hpp"
 #include "kernel.hpp"
 #include "string.hpp"
+#include "optimization.hpp"
 
 #include <iostream>
+#include <string>
 
 #ifdef MAC
 #include <OpenCL/cl.hpp>
@@ -154,6 +156,42 @@ int cle::CLInitializer::init(uint32_t const platform, uint32_t const device) {
     return 1;
 }
 
+int cle::CLInitializer::print_device_info() {
+    std::string buffer;
+    cl_ulong size;
+    cl_uint int_size;
+    size_t size_size;
+
+    cle_sanitize_val_return(
+            device_.getInfo(CL_DEVICE_VENDOR, &buffer));
+    std::cout << "Vendor: " << buffer << std::endl;
+
+    cle_sanitize_val_return(
+            device_.getInfo(CL_DEVICE_NAME, &buffer));
+    std::cout << "Device: " << buffer << std::endl;
+
+    cle_sanitize_val_return(
+            device_.getInfo(CL_DEVICE_PROFILE, &buffer));
+    std::cout << "OpenCL Profile: " << buffer << std::endl;
+
+    cle_sanitize_val_return(
+            device_.getInfo(CL_DEVICE_LOCAL_MEM_SIZE, &size));
+    std::cout << "Local memsize (KiB) " << size / 1024 << std::endl;
+
+    cle_sanitize_val_return(
+            device_.getInfo(CL_DEVICE_GLOBAL_MEM_SIZE, &size));
+    std::cout << "Global memsize (MiB) " << size / 1024 / 1024 << std::endl;
+
+    cle_sanitize_done_return(
+            cle::device_warp_size(device_, int_size));
+    std::cout << "Warp size: " << int_size << std::endl;
+
+    cle_sanitize_val_return(
+            device_.getInfo(CL_DEVICE_PROFILING_TIMER_RESOLUTION, &size_size));
+    std::cout << "Timer resolution: " << size_size << std::endl;
+
+    return CL_SUCCESS;
+}
 
 cl::Platform cle::CLInitializer::get_platform() {
     return this->platform_;
